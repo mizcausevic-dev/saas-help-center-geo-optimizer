@@ -1,0 +1,350 @@
+from __future__ import annotations
+
+import html
+import json
+from pathlib import Path
+
+from app.services.geo_service import build_service
+
+
+def _escape(value: str) -> str:
+    return html.escape(value, quote=True)
+
+
+def page_shell(title: str, kicker: str, body: str) -> str:
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{_escape(title)}</title>
+  <style>
+    :root {{
+      --bg: #07111d;
+      --panel: #0d1a2b;
+      --panel-2: #12233a;
+      --line: #1d3655;
+      --text: #eef2ff;
+      --muted: #98a7c2;
+      --accent: #68b7ff;
+      --accent-2: #f0d7a1;
+      --warn: #ffc86b;
+      --danger: #ff8c7f;
+    }}
+    * {{ box-sizing: border-box; }}
+    body {{
+      margin: 0;
+      font-family: "Segoe UI", Inter, sans-serif;
+      background: linear-gradient(180deg, #07111d 0%, #091827 100%);
+      color: var(--text);
+    }}
+    .page {{
+      width: 1440px;
+      margin: 0 auto;
+      padding: 48px 52px 64px;
+      background:
+        radial-gradient(circle at top right, rgba(104,183,255,0.16), transparent 30%),
+        linear-gradient(180deg, rgba(11,25,41,0.95), rgba(6,14,24,0.98));
+      min-height: 920px;
+    }}
+    .frame {{
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      padding: 28px 32px 36px;
+      background: rgba(11, 22, 37, 0.88);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    }}
+    .eyebrow {{
+      color: var(--accent);
+      font-size: 15px;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      font-weight: 700;
+    }}
+    h1 {{
+      margin: 0;
+      font-size: 66px;
+      line-height: 0.98;
+      color: #f4f1e3;
+      font-family: Georgia, "Times New Roman", serif;
+      max-width: 1120px;
+    }}
+    .lede {{
+      margin-top: 18px;
+      max-width: 920px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.6;
+    }}
+    .pill-row {{
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }}
+    .pill {{
+      border-radius: 999px;
+      padding: 10px 16px;
+      background: #1a2f4d;
+      border: 1px solid #29486e;
+      color: #f5f8ff;
+      font-size: 15px;
+      font-weight: 600;
+    }}
+    .stats {{
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 28px;
+    }}
+    .stat {{
+      padding: 22px 22px 18px;
+      border-radius: 24px;
+      background: #12233a;
+      border: 1px solid #25415f;
+      min-height: 168px;
+    }}
+    .label {{
+      color: #a8b6cd;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 13px;
+      margin-bottom: 14px;
+    }}
+    .value {{
+      color: #f4f1e3;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 50px;
+      line-height: 0.95;
+      margin-bottom: 12px;
+    }}
+    .copy {{
+      color: #c1cadc;
+      font-size: 16px;
+      line-height: 1.5;
+    }}
+    .section {{
+      margin-top: 34px;
+      border-radius: 28px;
+      border: 1px solid #203654;
+      background: #0d1524;
+      padding: 28px;
+    }}
+    .section-grid {{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }}
+    .card {{
+      border-radius: 22px;
+      border: 1px solid #263d5f;
+      background: #131e32;
+      padding: 22px;
+      min-height: 250px;
+    }}
+    .card .kicker {{
+      color: var(--accent);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      margin-bottom: 18px;
+      font-weight: 700;
+    }}
+    .card h2 {{
+      font-size: 24px;
+      line-height: 1.15;
+      margin: 0 0 14px;
+      color: #f4f1e3;
+      font-family: Georgia, "Times New Roman", serif;
+    }}
+    .card p, .card li {{
+      color: #bdc7d9;
+      font-size: 16px;
+      line-height: 1.55;
+      margin: 0;
+    }}
+    .card ul {{
+      padding-left: 18px;
+      margin: 0;
+    }}
+    .queue {{
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }}
+    .queue th, .queue td {{
+      text-align: left;
+      padding: 14px 12px;
+      border-bottom: 1px solid #203654;
+      vertical-align: top;
+      color: #d2d9e6;
+      font-size: 15px;
+      line-height: 1.45;
+    }}
+    .queue th {{
+      color: #8fbfff;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 12px;
+    }}
+    .priority-high {{ color: var(--danger); font-weight: 700; }}
+    .priority-medium {{ color: var(--warn); font-weight: 700; }}
+    .priority-watch {{ color: #9fe8c7; font-weight: 700; }}
+    pre {{
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #d7f7da;
+      font-size: 15px;
+      line-height: 1.45;
+      font-family: Consolas, "SFMono-Regular", monospace;
+    }}
+    .json {{
+      background: #07101b;
+      border: 1px solid #284462;
+      border-radius: 22px;
+      padding: 24px;
+      margin-top: 24px;
+    }}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="frame">
+      <div class="eyebrow">{_escape(kicker)}</div>
+      {body}
+    </div>
+  </div>
+</body>
+</html>
+"""
+
+
+def render_overview() -> str:
+    service = build_service()
+    summary = service.summary()
+    queue = service.queue()
+    body = f"""
+      <h1>Turn your help center into AI-citable product support instead of generic search noise.</h1>
+      <p class="lede">
+        SaaS Help Center GEO Optimizer grades support content for entity clarity,
+        FAQ coverage, answer structure, schema readiness, and freshness so SaaS
+        teams know which articles to upgrade first for AI answer visibility.
+      </p>
+      <div class="pill-row">
+        <div class="pill">Zendesk / Intercom export</div>
+        <div class="pill">FAQ and schema scoring</div>
+        <div class="pill">AI visibility queue</div>
+        <div class="pill">content ops proof</div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="label">Articles scored</div><div class="value">{summary['articleCount']}</div><div class="copy">Help-center content audited for answer-engine readiness.</div></div>
+        <div class="stat"><div class="label">Average GEO score</div><div class="value">{summary['averageGeoScore']}</div><div class="copy">A blended measure of entity, structure, FAQ, schema, citation, and freshness quality.</div></div>
+        <div class="stat"><div class="label">High-priority fixes</div><div class="value">{summary['highPriorityCount']}</div><div class="copy">Articles that need the fastest attention to avoid weak AI answer coverage.</div></div>
+        <div class="stat"><div class="label">FAQ / schema gaps</div><div class="value">{summary['faqGapCount'] + summary['schemaGapCount']}</div><div class="copy">Pieces missing structured answer blocks or schema reinforcement.</div></div>
+      </div>
+      <div class="section">
+        <div class="section-grid">
+          {''.join(
+              f'''<div class="card"><div class="kicker">{_escape(article["category"])}</div><h2>{_escape(article["title"])}</h2><p>GEO score: {_escape(str(article["geoScore"]))} • Priority: {_escape(article["priority"])}</p><ul>{''.join(f"<li>{_escape(item)}</li>" for item in article["fixQueue"][:3])}</ul></div>'''
+              for article in queue
+          )}
+        </div>
+      </div>
+    """
+    return page_shell("SaaS Help Center GEO Optimizer - Overview", "saas help center geo optimizer", body)
+
+
+def render_queue() -> str:
+    service = build_service()
+    queue = service.queue()
+    rows = "".join(
+        f"""
+        <tr>
+          <td>{_escape(article['title'])}</td>
+          <td>{_escape(article['category'])}</td>
+          <td>{article['geoScore']}</td>
+          <td class="priority-{_escape(article['priority'])}">{_escape(article['priority'])}</td>
+          <td>{_escape(article['fixQueue'][0] if article['fixQueue'] else 'Keep monitoring.')}</td>
+        </tr>
+        """
+        for article in queue
+    )
+    body = f"""
+      <h1>A prioritized fix queue for the support content that will shape AI answers first.</h1>
+      <p class="lede">
+        Instead of optimizing content blindly, this queue sorts SaaS support content
+        by likely AI visibility impact and tells the content team what to fix next.
+      </p>
+      <div class="section">
+        <table class="queue">
+          <thead>
+            <tr>
+              <th>Article</th>
+              <th>Category</th>
+              <th>GEO score</th>
+              <th>Priority</th>
+              <th>Lead fix</th>
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </table>
+      </div>
+    """
+    return page_shell("SaaS Help Center GEO Optimizer - Queue", "fix queue", body)
+
+
+def render_evidence() -> str:
+    service = build_service()
+    article = service.article("set-up-sso-for-your-workspace")
+    body = f"""
+      <h1>The weak articles are easy to explain, which makes the optimization story believable.</h1>
+      <p class="lede">
+        The point is not just to label something bad. The repo explains why an article
+        is weak for answer engines and maps that back to concrete FAQ, structure, schema,
+        and freshness work that content teams can ship quickly.
+      </p>
+      <div class="section-grid">
+        <div class="card"><div class="kicker">entity clarity</div><h2>{article['entityClarity']}</h2><p>Named entities help answer engines understand product roles, integrations, and topics.</p></div>
+        <div class="card"><div class="kicker">faq readiness</div><h2>{article['faqReadiness']}</h2><p>Explicit FAQ blocks improve the odds of answer extraction and concise summaries.</p></div>
+        <div class="card"><div class="kicker">freshness</div><h2>{article['freshness']}</h2><p>Older authentication content erodes trust even when the underlying setup steps still work.</p></div>
+      </div>
+      <div class="json"><pre>{_escape(json.dumps(article, indent=2))}</pre></div>
+    """
+    return page_shell("SaaS Help Center GEO Optimizer - Evidence", "evidence lane", body)
+
+
+def render_api_summary() -> str:
+    payload = build_service().sample_payload()
+    body = f"""
+      <h1>An API layer that makes content optimization measurable and easy to integrate.</h1>
+      <p class="lede">
+        The service exposes summaries, article-level scores, and prioritized fixes so
+        RevOps, support, and content teams can use the same GEO queue in dashboards,
+        internal tools, or publishing workflows.
+      </p>
+      <div class="section-grid">
+        <div class="card"><div class="kicker">routes</div><h2>Summary, queue, and article scoring APIs.</h2><p><code>/api/dashboard/summary</code>, <code>/api/articles</code>, <code>/api/articles/{'{slug}'}</code>, and <code>/api/sample</code>.</p></div>
+        <div class="card"><div class="kicker">fit</div><h2>Built for SaaS content ops and AI-era support.</h2><p>It works well as a content QA layer for help centers, onboarding docs, and release-note libraries.</p></div>
+        <div class="card"><div class="kicker">payload</div><h2>Sample output for the top GEO fixes.</h2><p>Small enough to inspect quickly, detailed enough to power a content roadmap.</p></div>
+      </div>
+      <div class="json"><pre>{_escape(json.dumps(payload, indent=2))}</pre></div>
+    """
+    return page_shell("SaaS Help Center GEO Optimizer - API Summary", "api summary", body)
+
+
+def write_static_proof_pages(output_dir: Path) -> list[Path]:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    pages = {
+        "01-overview.html": render_overview(),
+        "02-fix-queue.html": render_queue(),
+        "03-evidence-lane.html": render_evidence(),
+        "04-api-summary.html": render_api_summary(),
+    }
+    written: list[Path] = []
+    for name, contents in pages.items():
+        target = output_dir / name
+        target.write_text(contents, encoding="utf-8")
+        written.append(target)
+    return written

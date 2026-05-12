@@ -1,0 +1,116 @@
+{
+  "brand": "Northstar Cloud",
+  "platform": "Zendesk export",
+  "articles": [
+    {
+      "slug": "set-up-sso-for-your-workspace",
+      "title": "Set up SSO for your workspace",
+      "category": "Authentication",
+      "url": "https://help.northstarcloud.com/articles/set-up-sso-for-your-workspace",
+      "body": [
+        "Learn how to configure SAML SSO for your Northstar Cloud workspace.",
+        "Admins can connect Okta, Azure AD, or Google Workspace to centralize sign-in and enforce login policy.",
+        "To get started, open Security settings, copy your ACS URL, and upload the IdP metadata file."
+      ],
+      "headings": [
+        "Before you begin",
+        "Connect your identity provider",
+        "Verify sign-in"
+      ],
+      "faq_blocks": 0,
+      "schema_types": [
+        "Article"
+      ],
+      "entity_mentions": [
+        "SAML",
+        "Okta",
+        "Azure AD",
+        "Google Workspace"
+      ],
+      "last_updated_days_ago": 211
+    },
+    {
+      "slug": "understand-proration-on-plan-changes",
+      "title": "Understand proration on plan changes",
+      "category": "Billing",
+      "url": "https://help.northstarcloud.com/articles/understand-proration-on-plan-changes",
+      "body": [
+        "Northstar Cloud prorates upgrades and downgrades using the remaining time in your billing cycle.",
+        "When you move from Growth to Enterprise, the unused portion of your old plan is credited automatically.",
+        "Your next invoice shows the credit, the new charge, and the updated renewal total."
+      ],
+      "headings": [
+        "How proration works",
+        "Upgrade example",
+        "Downgrade example",
+        "How it appears on invoices"
+      ],
+      "faq_blocks": 2,
+      "schema_types": [
+        "Article",
+        "FAQPage"
+      ],
+      "entity_mentions": [
+        "Growth plan",
+        "Enterprise plan",
+        "invoice",
+        "credit"
+      ],
+      "last_updated_days_ago": 24
+    },
+    {
+      "slug": "export-product-usage-for-board-reporting",
+      "title": "Export product usage for board reporting",
+      "category": "Analytics",
+      "url": "https://help.northstarcloud.com/articles/export-product-usage-for-board-reporting",
+      "body": [
+        "Use the usage export to pull workspace adoption, license utilization, and expansion signals into CSV format.",
+        "The export includes seat assignments, active users, workflow volume, and engagement windows.",
+        "Leaders often use the file for board packs and quarterly business reviews."
+      ],
+      "headings": [
+        "Export the usage report",
+        "Available metrics"
+      ],
+      "faq_blocks": 1,
+      "schema_types": [
+        "Article"
+      ],
+      "entity_mentions": [
+        "CSV",
+        "QBR",
+        "board pack"
+      ],
+      "last_updated_days_ago": 93
+    },
+    {
+      "slug": "fix-webhook-signature-errors",
+      "title": "Fix webhook signature errors",
+      "category": "Developers",
+      "url": "https://help.northstarcloud.com/articles/fix-webhook-signature-errors",
+      "body": [
+        "Webhook signature failures usually mean your endpoint secret is outdated or the request body was modified before verification.",
+        "Northstar Cloud signs each event using HMAC-SHA256 and sends the timestamp and signature in the X-Northstar-Signature header.",
+        "Verify the raw payload before parsing JSON and rotate secrets if you suspect exposure."
+      ],
+      "headings": [
+        "Why signature verification fails",
+        "Verify the raw payload",
+        "Rotate the endpoint secret",
+        "Test with replay events"
+      ],
+      "faq_blocks": 3,
+      "schema_types": [
+        "Article",
+        "FAQPage",
+        "TechArticle"
+      ],
+      "entity_mentions": [
+        "HMAC-SHA256",
+        "X-Northstar-Signature",
+        "JSON"
+      ],
+      "last_updated_days_ago": 12
+    }
+  ]
+}
