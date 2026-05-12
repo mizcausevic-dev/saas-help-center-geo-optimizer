@@ -1,70 +1,40 @@
-﻿# Changelog
+# Changelog
 
 All notable changes to this project are documented here.
-
-This log is intentionally written as an engineering record rather than a launch theater timeline. Dates reflect when the concept, design, prototype, and public packaging phases were mature enough to document.
 
 ## [1.0.0] - 2026-05-12
 
 ### Released
-- Published **saas-help-center-geo-optimizer** as a public, portfolio-grade answer-engine visibility system.
-- Packaged the current implementation, documentation, validation workflow, and proof surfaces into a repo that could be reviewed by engineering, product, and operating stakeholders.
-- Tightened the repo story around the real-world operating problem: answer-engine visibility gaps, weak semantic packaging, and inconsistent structured-data coverage.
+- Published **saas-help-center-geo-optimizer** as a market-facing GEO and answer-readiness repo for SaaS content teams.
+- Packaged content scoring, FAQ quality review, semantic packaging, and prioritized fix queues into one practical system.
+- Clarified the repo around AI visibility and answer-engine discoverability, not legacy SEO box-checking.
 
 ### Why this mattered
-- Existing approaches in SEO crawlers, analytics dashboards, and structured-data validators were useful for adjacent workflows.
-- They still missed the core need: a way to connect web hygiene with citation readiness, semantic packaging, and answer-engine discoverability.
-- This release made the repo readable as an operational capability rather than a narrow technical demo.
+- Help centers are often rich in intent but weakly structured for AI retrieval and citation.
+- Content teams can measure traffic while still missing whether their docs are legible to answer systems.
+- This release made the repo speak directly to product marketing, content ops, and support content teams.
 
-## [0.1.0] - 2026-02-21
+## [0.1.0] - 2026-02-12
 
 ### Shipped
-- Cut the first coherent internal version of the product shape behind **saas-help-center-geo-optimizer**.
-- Standardized the core objects, decision surfaces, and operator outputs around the repo's main working problem.
-- Established the first reviewable version of the architecture described as: Scores SaaS help center content for GEO readiness, answer structure, FAQ quality, and AI visibility opportunities.
+- Standardized the first scoring model for GEO readiness, heading structure, FAQ clarity, and entity packaging.
+- Added fix queues so the repo could drive work, not just produce scores.
 
-### Notes
-- This milestone was less about polish and more about proving the operating model.
-- The emphasis was on turning a messy domain problem into something a real team could reason about in CI, review, or day-to-day operations.
-
-## [Prototype] - 2025-07-14
+## [Prototype] - 2025-05-07
 
 ### Built
-- Created the first runnable prototype for the repo's core workflow and decision model.
-- Started validating the design against real operating pressures instead of idealized sample flows.
-- Added enough shape to test whether the project could surface action, not just information.
+- Built the first prototype around help-center article quality and semantic discoverability gaps.
+- Tested whether content teams would get more value from prioritized remediation than from broad crawl output.
 
-### Problem pressure
-- The prototype phase was shaped by concrete issues such as answer-engine discoverability gaps, thin structured data, and inconsistent entity linking.
-- This was the point where the project moved from a sketch into something worth hardening.
-
-## [Design Phase] - 2022-09-11
+## [Design Phase] - 2024-01-26
 
 ### Designed
-- Defined the core philosophy for the system:
-  - operator-first
-  - decision-legible
-  - CI- and review-friendly
-  - suitable for mixed technical and business audiences
-- Chose outputs that would make the repo useful to real operators instead of just visually impressive.
-- Focused the design on explainability, evidence, and next-best action rather than passive reporting.
+- Chose an answer-readiness framing over a generic SEO auditor.
+- Put citation potential and content usability at the center of the scoring model.
+- Kept outputs accessible to content teams, not just technical SEOs.
 
-### Rejected approaches
-- Avoided turning the repo into a generic dashboard or CRUD exercise.
-- Avoided thin wrapper patterns that would hide the actual operating problem behind fashionable tooling choices.
-
-## [Idea Origin] - 2022-02-11
+## [Idea Origin] - 2023-04-09
 
 ### Observed
-- The initial idea surfaced while looking at how teams were handling answer-engine visibility gaps, weak semantic packaging, and inconsistent structured-data coverage.
-- The recurring pattern was that people could often see fragments of the problem, but not the whole operational story in one place.
-
-### Insight
-- The missing product was not another point solution. It was a clearer operating layer that made the work legible to growth, search, and content operations teams.
-- That insight became the basis for **saas-help-center-geo-optimizer**.
-
-## [Background Signals] - 2022-08-09
-
-### Context
-- Earlier platform, governance, and operator-tooling work made one pattern obvious: the dangerous systems are rarely the ones with no controls at all. They are the ones where controls exist, but are fragmented, weakly owned, and hard to read under pressure.
-- That pattern shaped this project long before the public repo existed.
+- The idea started from a pattern in SaaS help centers: strong user intent, weak semantic packaging.
+- The missing layer was an optimizer that treated AI visibility as a content-operations problem.
